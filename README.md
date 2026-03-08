@@ -7,7 +7,7 @@ Processes website visitor logs from [klimenko.dk](https://klimenko.dk). Logs are
 - **Language:** Python (uv, Pydantic)
 - **Storage:** Azure Blob Storage
 - **Processing:** DuckDB
-- **Output:** Parquet files
+- **Output:** CSV files (exported from DuckDB gold layer)
 - **Visualization:** Power BI
 
 ## Tasks
@@ -20,7 +20,7 @@ Run tasks with `uv run invoke <task>`:
 | `bronze` | Load JSONL files into DuckDB bronze layer |
 | `silver` | Filter to klimenko.dk visits, exclude ignored pins |
 | `gold` | Build Kimball star schema (dim_page, dim_geo, fact_events, fact_sessions) |
-| `export` | Export gold tables to Parquet files in `output/` for Power BI |
+| `export` | Export gold tables to CSV files in `output/` for Power BI |
 
 ## Setup
 

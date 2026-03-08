@@ -254,9 +254,9 @@ def export(ctx):
     db = duckdb.connect(str(DB_PATH))
 
     for table in ["dim_page", "dim_geo", "fact_events", "fact_sessions"]:
-        dest = OUTPUT_DIR / f"{table}.parquet"
-        db.execute(f"copy gold.{table} to '{dest}' (format parquet)")
+        dest = OUTPUT_DIR / f"{table}.csv"
+        db.execute(f"copy gold.{table} to '{dest}' (format csv, header true)")
         size_kb = dest.stat().st_size / 1024
-        print(f"Exported {table}.parquet ({size_kb:.1f} KB)")
+        print(f"Exported {table}.csv ({size_kb:.1f} KB)")
 
     db.close()

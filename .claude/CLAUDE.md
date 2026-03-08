@@ -11,5 +11,5 @@ Ping Analytics processes website visitor logs. Logs are downloaded from Azure Bl
 - **Language:** Python (use uv for package management, Pydantic for data validation)
 - **Storage:** Azure Blob Storage (credentials via `AZURE_STORAGE_ACCOUNT_NAME` and `AZURE_STORAGE_ACCOUNT_KEY`)
 - **Processing:** DuckDB
-- **Output:** Parquet files
+- **Output:** CSV files (exported from DuckDB gold layer)
 - **Visualization:** Power BI
