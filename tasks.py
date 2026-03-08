@@ -13,6 +13,7 @@ LANDING_CONTAINER = "logs-landing"
 ARCHIVE_CONTAINER = "logs-landing-archive"
 DATA_DIR = Path("data")
 DB_PATH = Path("db/ping.duckdb")
+OUTPUT_DIR = Path("output")
 
 
 def _blob_client() -> BlobServiceClient:
@@ -242,5 +243,20 @@ def gold(ctx):
     for table in ["dim_page", "dim_geo", "fact_events", "fact_sessions"]:
         count = db.execute(f"select count(*) from gold.{table}").fetchone()[0]
         print(f"gold.{table}: {count} rows")
+
+    db.close()
+
+
+@task
+def export(ctx):
+    """Export gold layer tables to Parquet files for Power BI."""
+    OUTPUT_DIR.mkdir(exist_ok=True)
+    db = duckdb.connect(str(DB_PATH))
+
+    for table in ["dim_page", "dim_geo", "fact_events", "fact_sessions"]:
+        dest = OUTPUT_DIR / f"{table}.parquet"
+        db.execute(f"copy gold.{table} to '{dest}' (format parquet)")
+        size_kb = dest.stat().st_size / 1024
+        print(f"Exported {table}.parquet ({size_kb:.1f} KB)")
 
     db.close()

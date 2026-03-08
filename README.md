@@ -20,9 +20,10 @@ Run tasks with `uv run invoke <task>`:
 | `bronze` | Load JSONL files into DuckDB bronze layer |
 | `silver` | Filter to klimenko.dk visits, exclude ignored pins |
 | `gold` | Build Kimball star schema (dim_page, dim_geo, fact_events, fact_sessions) |
+| `export` | Export gold tables to Parquet files in `output/` for Power BI |
 
 ## Setup
 
 1. Install dependencies: `uv sync`
 2. Copy `.env.example` to `.env` and fill in Azure credentials
-3. Run the pipeline: `uv run invoke landing bronze silver gold`
+3. Run the pipeline: `uv run invoke landing bronze silver gold export`
