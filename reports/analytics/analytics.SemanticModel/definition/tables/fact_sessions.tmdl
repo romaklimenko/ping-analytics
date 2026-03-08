@@ -1,0 +1,104 @@
+table fact_sessions
+	lineageTag: b5bccbb9-1b9b-49c0-9564-37dd0fa03c5d
+
+	column session_id
+		dataType: string
+		lineageTag: 5439698e-a675-402e-aca9-5c7939cd89bd
+		summarizeBy: none
+		sourceColumn: session_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column geo_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 462e630b-38ec-4892-8890-0fc38a2fcb42
+		summarizeBy: none
+		sourceColumn: geo_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column entry_page_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 28d6202f-8e94-4d24-8895-0511a5cf0e88
+		summarizeBy: sum
+		sourceColumn: entry_page_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column exit_page_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 19fee22b-1882-43de-ac48-a9d6d2efb05f
+		summarizeBy: sum
+		sourceColumn: exit_page_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column session_start
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 63d1bf48-0dc3-4248-a9ee-8e807f7c735a
+		summarizeBy: none
+		sourceColumn: session_start
+
+		annotation SummarizationSetBy = Automatic
+
+	column session_end
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: d92c3ef3-89e0-47ca-8acf-0953de5ae7dd
+		summarizeBy: none
+		sourceColumn: session_end
+
+		annotation SummarizationSetBy = Automatic
+
+	column duration_seconds
+		dataType: int64
+		formatString: 0
+		lineageTag: 99875acc-7f5e-46e7-be90-ad2f523a215c
+		summarizeBy: sum
+		sourceColumn: duration_seconds
+
+		annotation SummarizationSetBy = Automatic
+
+	column page_count
+		dataType: int64
+		formatString: 0
+		lineageTag: bca5dd15-9adc-4a54-aab9-00cdf2ff6404
+		summarizeBy: sum
+		sourceColumn: page_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_bounce
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 386414ca-0caf-4847-981c-428065225467
+		summarizeBy: none
+		sourceColumn: is_bounce
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_bot
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 9065e48c-5025-47d6-a4e2-c5e2fae8541e
+		summarizeBy: none
+		sourceColumn: is_bot
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_sessions = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:\home\ping-analytics\output\fact_sessions.csv"),[Delimiter=",", Columns=10, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"session_id", type text}, {"geo_key", Int64.Type}, {"entry_page_key", Int64.Type}, {"exit_page_key", Int64.Type}, {"session_start", type datetime}, {"session_end", type datetime}, {"duration_seconds", Int64.Type}, {"page_count", Int64.Type}, {"is_bounce", type logical}, {"is_bot", type logical}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

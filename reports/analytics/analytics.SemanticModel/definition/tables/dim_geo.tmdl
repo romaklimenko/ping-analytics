@@ -1,0 +1,82 @@
+table dim_geo
+	lineageTag: 18837f23-219f-4366-b104-dc8ed3ebef80
+
+	column geo_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 94d08e8c-3ff5-4c36-8b01-21c8b239494c
+		summarizeBy: none
+		sourceColumn: geo_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column city
+		dataType: string
+		lineageTag: 681212d6-2453-4414-9265-3402b3fbaf7c
+		summarizeBy: none
+		sourceColumn: city
+
+		annotation SummarizationSetBy = Automatic
+
+	column country_region
+		dataType: string
+		lineageTag: 48de4d06-2dbb-4da1-8432-a9a8b2a71f0e
+		summarizeBy: none
+		sourceColumn: country_region
+
+		annotation SummarizationSetBy = Automatic
+
+	column country_code
+		dataType: string
+		lineageTag: 27361a0b-6458-42e6-a8df-dd13caf022cf
+		summarizeBy: none
+		sourceColumn: country_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column continent_code
+		dataType: string
+		lineageTag: f25e908d-28fe-446d-8f0d-236648bdfc70
+		summarizeBy: none
+		sourceColumn: continent_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column timezone
+		dataType: string
+		lineageTag: 66a0903e-c0b7-4171-8bea-d663559e9128
+		summarizeBy: none
+		sourceColumn: timezone
+
+		annotation SummarizationSetBy = Automatic
+
+	column latitude
+		dataType: int64
+		formatString: 0
+		lineageTag: 363fd08d-63da-4075-83e3-8889af89bedd
+		summarizeBy: sum
+		sourceColumn: latitude
+
+		annotation SummarizationSetBy = Automatic
+
+	column longitude
+		dataType: int64
+		formatString: 0
+		lineageTag: 62e732d0-8fce-4a8d-a1ce-0b78a9122f8f
+		summarizeBy: sum
+		sourceColumn: longitude
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_geo = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:\home\ping-analytics\output\dim_geo.csv"),[Delimiter=",", Columns=8, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"geo_key", Int64.Type}, {"city", type text}, {"country_region", type text}, {"country_code", type text}, {"continent_code", type text}, {"timezone", type text}, {"latitude", Int64.Type}, {"longitude", Int64.Type}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

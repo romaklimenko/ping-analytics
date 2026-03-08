@@ -1,0 +1,17 @@
+relationship AutoDetected_9f866866-1eb9-4f44-a6c8-265f3ab3c48e
+	fromColumn: fact_events.geo_key
+	toColumn: dim_geo.geo_key
+
+relationship AutoDetected_5fb3e1ae-29c7-4c34-b872-5c8c7d249a37
+	fromColumn: fact_events.page_key
+	toColumn: dim_page.page_key
+
+relationship AutoDetected_86c8a090-4e84-4e4d-a104-acd0f31a0a54
+	fromColumn: fact_sessions.geo_key
+	toColumn: dim_geo.geo_key
+
+relationship AutoDetected_1fb1d158-64d7-49d8-8b67-f740d44bd952
+	isActive: false
+	fromColumn: fact_events.session_id
+	toColumn: fact_sessions.session_id
+

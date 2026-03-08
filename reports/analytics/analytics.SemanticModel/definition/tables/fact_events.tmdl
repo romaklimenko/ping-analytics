@@ -1,0 +1,137 @@
+table fact_events
+	lineageTag: b1b9cf3e-cc81-4e26-998c-46c0a662ccf2
+
+	column event_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 5d571d72-5313-4083-b1ea-9cc9c884fb1b
+		summarizeBy: sum
+		sourceColumn: event_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column page_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 50edb7db-55fe-4b62-b6b7-8ef3f655308b
+		summarizeBy: none
+		sourceColumn: page_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column geo_key
+		dataType: int64
+		formatString: 0
+		lineageTag: bea01ede-403f-47b0-91f7-713736272aa6
+		summarizeBy: none
+		sourceColumn: geo_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column session_id
+		dataType: string
+		lineageTag: a16fea6d-7959-4f14-a16b-b4005e2f943c
+		summarizeBy: none
+		sourceColumn: session_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column event_type
+		dataType: string
+		lineageTag: c3ed3045-5774-4127-925c-5d4e4d2aa273
+		summarizeBy: none
+		sourceColumn: event_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column referrer
+		dataType: string
+		lineageTag: 6f65b69d-d3ca-4d56-a679-adf46a3c6096
+		summarizeBy: none
+		sourceColumn: referrer
+
+		annotation SummarizationSetBy = Automatic
+
+	column from_path
+		dataType: string
+		lineageTag: 2a766a36-7b84-4e90-9a9c-d8fd8f668ef0
+		summarizeBy: none
+		sourceColumn: from_path
+
+		annotation SummarizationSetBy = Automatic
+
+	column to_path
+		dataType: string
+		lineageTag: b85384f4-8cb0-40c4-ba7d-e8d11215fae8
+		summarizeBy: none
+		sourceColumn: to_path
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_bot
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 45d26f66-a391-49f0-9000-6b3e5ca8d48c
+		summarizeBy: none
+		sourceColumn: is_bot
+
+		annotation SummarizationSetBy = Automatic
+
+	column bot_name
+		dataType: string
+		lineageTag: 9abf860e-1b22-46e5-94c7-50bdc8185e5a
+		summarizeBy: none
+		sourceColumn: bot_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column event_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 213959f1-f1bb-4fa3-a009-871dd8579930
+		summarizeBy: none
+		sourceColumn: event_timestamp
+
+		annotation SummarizationSetBy = Automatic
+
+	column event_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 9b1daa35-e216-4547-8dfc-51bcedfb0d98
+		summarizeBy: none
+		sourceColumn: event_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column client_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 548e4d39-bb67-4372-bc96-56014e67c50a
+		summarizeBy: none
+		sourceColumn: client_timestamp
+
+		annotation SummarizationSetBy = Automatic
+
+	column ip_address
+		dataType: int64
+		formatString: 0
+		lineageTag: 17407b20-f107-4c4e-8e16-081b6cf42b34
+		summarizeBy: sum
+		sourceColumn: ip_address
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fact_events = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:\home\ping-analytics\output\fact_events.csv"),[Delimiter=",", Columns=14, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"event_key", Int64.Type}, {"page_key", Int64.Type}, {"geo_key", Int64.Type}, {"session_id", type text}, {"event_type", type text}, {"referrer", type text}, {"from_path", type text}, {"to_path", type text}, {"is_bot", type logical}, {"bot_name", type text}, {"event_timestamp", type datetime}, {"event_date", type date}, {"client_timestamp", type datetime}, {"ip_address", Int64.Type}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

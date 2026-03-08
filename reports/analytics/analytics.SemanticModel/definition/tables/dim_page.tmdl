@@ -1,0 +1,57 @@
+table dim_page
+	lineageTag: 001e79af-1cf7-4a54-a6f0-dd3e20f70efb
+
+	column page_key
+		dataType: int64
+		formatString: 0
+		lineageTag: ffbd4857-8a2c-411a-b94b-e3ddd76b15c3
+		summarizeBy: none
+		sourceColumn: page_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column page_path
+		dataType: string
+		lineageTag: 0642bb90-b697-4a62-b08e-54a3b061ad5d
+		summarizeBy: none
+		sourceColumn: page_path
+
+		annotation SummarizationSetBy = Automatic
+
+	column section
+		dataType: string
+		lineageTag: 435882e3-1d19-4cd2-9ad8-cf8f50f67dc7
+		summarizeBy: none
+		sourceColumn: section
+
+		annotation SummarizationSetBy = Automatic
+
+	column blog_year
+		dataType: int64
+		formatString: 0
+		lineageTag: df5420f4-693b-4fdb-a788-6958378cc9c0
+		summarizeBy: none
+		sourceColumn: blog_year
+
+		annotation SummarizationSetBy = Automatic
+
+	column slug
+		dataType: string
+		lineageTag: e0a21eb6-c99e-4699-b265-5520722ba3e4
+		summarizeBy: none
+		sourceColumn: slug
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dim_page = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:\home\ping-analytics\output\dim_page.csv"),[Delimiter=",", Columns=5, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"page_key", Int64.Type}, {"page_path", type text}, {"section", type text}, {"blog_year", Int64.Type}, {"slug", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+
