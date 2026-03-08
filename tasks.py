@@ -81,3 +81,23 @@ def bronze(ctx):
     count = db.execute("select count(*) from bronze.logs").fetchone()[0]
     print(f"Bronze layer loaded: {count} rows")
     db.close()
+
+
+@task
+def silver(ctx):
+    """Build silver layer: filter out ignored pins and non-klimenko.dk domains."""
+    pin_to_ignore = os.environ.get("PIN_TO_IGNORE")
+    db = duckdb.connect(str(DB_PATH))
+
+    db.execute("create schema if not exists silver")
+    db.execute("""
+        create or replace table silver.logs as
+        select *
+        from bronze.logs
+        where regexp_extract(url, 'https?://([^/]+)', 1) like '%klimenko.dk'
+          and (pin is null or pin != $pin_to_ignore)
+    """, {"pin_to_ignore": pin_to_ignore})
+
+    count = db.execute("select count(*) from silver.logs").fetchone()[0]
+    print(f"Silver layer loaded: {count} rows")
+    db.close()
